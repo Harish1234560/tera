@@ -1,0 +1,225 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500;1,600;1,700;1,800;1,900&family=Orbitron:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 36 33% 97%;
+    --foreground: 20 10% 12%;
+
+    --card: 36 30% 94%;
+    --card-foreground: 20 10% 12%;
+
+    --popover: 36 30% 94%;
+    --popover-foreground: 20 10% 12%;
+
+    --primary: 42 65% 48%;
+    --primary-foreground: 36 33% 97%;
+
+    --secondary: 15 55% 50%;
+    --secondary-foreground: 36 33% 97%;
+
+    --muted: 36 20% 90%;
+    --muted-foreground: 20 8% 45%;
+
+    --accent: 42 80% 55%;
+    --accent-foreground: 20 10% 12%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 36 15% 85%;
+    --input: 36 15% 85%;
+    --ring: 42 65% 48%;
+
+    --radius: 0.75rem;
+
+    --gold: 42 65% 48%;
+    --gold-bright: 42 80% 55%;
+    --terracotta: 15 55% 50%;
+    --terracotta-light: 15 60% 62%;
+    --cosmic-blue: 36 20% 90%;
+    --nebula: 36 15% 85%;
+
+    --font-display: 'Playfair Display', serif;
+    --font-display-tech: 'Orbitron', sans-serif;
+    --font-body: 'Space Grotesk', sans-serif;
+
+    --sidebar-background: 36 33% 97%;
+    --sidebar-foreground: 20 10% 12%;
+    --sidebar-primary: 42 65% 48%;
+    --sidebar-primary-foreground: 36 33% 97%;
+    --sidebar-accent: 36 20% 90%;
+    --sidebar-accent-foreground: 20 10% 12%;
+    --sidebar-border: 36 15% 85%;
+    --sidebar-ring: 42 65% 48%;
+  }
+
+  .dark {
+    --background: 230 25% 5%;
+    --foreground: 45 20% 90%;
+
+    --card: 230 20% 8%;
+    --card-foreground: 45 20% 90%;
+
+    --popover: 230 20% 8%;
+    --popover-foreground: 45 20% 90%;
+
+    --primary: 42 65% 58%;
+    --primary-foreground: 230 25% 5%;
+
+    --secondary: 15 55% 50%;
+    --secondary-foreground: 45 20% 95%;
+
+    --muted: 230 15% 15%;
+    --muted-foreground: 230 10% 55%;
+
+    --accent: 42 80% 65%;
+    --accent-foreground: 230 25% 5%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 230 15% 18%;
+    --input: 230 15% 18%;
+    --ring: 42 65% 58%;
+
+    --gold: 42 65% 58%;
+    --gold-bright: 42 80% 65%;
+    --terracotta: 15 55% 50%;
+    --terracotta-light: 15 60% 62%;
+    --cosmic-blue: 230 40% 25%;
+    --nebula: 270 30% 20%;
+
+    --sidebar-background: 230 25% 5%;
+    --sidebar-foreground: 45 20% 90%;
+    --sidebar-primary: 42 65% 58%;
+    --sidebar-primary-foreground: 230 25% 5%;
+    --sidebar-accent: 230 15% 15%;
+    --sidebar-accent-foreground: 45 20% 90%;
+    --sidebar-border: 230 15% 18%;
+    --sidebar-ring: 42 65% 58%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: var(--font-body);
+    overflow-x: hidden;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-display);
+  }
+}
+
+@layer components {
+  .font-display-tech {
+    font-family: var(--font-display-tech);
+  }
+
+  .text-gradient-gold {
+    @apply bg-clip-text text-transparent;
+    background-image: linear-gradient(135deg, hsl(var(--gold-bright)), hsl(var(--terracotta-light)), hsl(var(--gold)));
+  }
+
+  .text-gradient-cosmic {
+    @apply bg-clip-text text-transparent;
+    background-image: linear-gradient(135deg, hsl(var(--gold)), hsl(var(--primary)), hsl(var(--gold-bright)));
+  }
+
+  .glow-gold {
+    box-shadow: 0 0 30px -5px hsl(var(--gold) / 0.4), 0 0 60px -10px hsl(var(--terracotta) / 0.2);
+  }
+
+  .glow-text {
+    text-shadow: 0 0 40px hsl(var(--gold) / 0.5), 0 0 80px hsl(var(--terracotta) / 0.3);
+  }
+
+  .border-glow {
+    border: 1px solid hsl(var(--gold) / 0.2);
+    box-shadow: inset 0 0 20px hsl(var(--gold) / 0.05), 0 0 20px hsl(var(--gold) / 0.1);
+  }
+
+  .cosmic-bg {
+    background: radial-gradient(ellipse at 20% 50%, hsl(var(--cosmic-blue) / 0.3) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 20%, hsl(var(--nebula) / 0.2) 0%, transparent 50%),
+                radial-gradient(ellipse at 50% 80%, hsl(var(--terracotta) / 0.08) 0%, transparent 50%);
+  }
+
+  .card-cosmic {
+    @apply rounded-xl p-6;
+    background: hsl(var(--card));
+    border: 1px solid hsl(var(--border));
+    backdrop-filter: blur(10px);
+  }
+
+  .dark .card-cosmic {
+    background: linear-gradient(135deg, hsl(var(--card) / 0.8), hsl(var(--muted) / 0.4));
+    border: 1px solid hsl(var(--gold) / 0.15);
+  }
+
+  .card-cosmic:hover {
+    border-color: hsl(var(--gold) / 0.4);
+    box-shadow: 0 0 30px hsl(var(--gold) / 0.1), inset 0 0 30px hsl(var(--gold) / 0.03);
+  }
+
+  .btn-cosmic {
+    @apply px-8 py-3 rounded-lg font-semibold tracking-wider uppercase text-sm transition-all duration-300;
+    font-family: var(--font-body);
+    background: linear-gradient(135deg, hsl(var(--gold)), hsl(var(--terracotta)));
+    color: hsl(36 33% 97%);
+    box-shadow: 0 4px 20px hsl(var(--gold) / 0.3);
+  }
+
+  .btn-cosmic:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px hsl(var(--gold) / 0.5);
+  }
+
+  .btn-outline-cosmic {
+    @apply px-8 py-3 rounded-lg font-semibold tracking-wider uppercase text-sm transition-all duration-300;
+    font-family: var(--font-body);
+    border: 1px solid hsl(var(--gold) / 0.5);
+    color: hsl(var(--foreground));
+    background: transparent;
+  }
+
+  .btn-outline-cosmic:hover {
+    background: hsl(var(--gold) / 0.1);
+    border-color: hsl(var(--gold));
+    box-shadow: 0 0 20px hsl(var(--gold) / 0.2);
+  }
+
+  .section-divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, hsl(var(--gold) / 0.3), transparent);
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: hsl(var(--background));
+}
+::-webkit-scrollbar-thumb {
+  background: hsl(var(--gold) / 0.3);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--gold) / 0.5);
+}
+
+/* Smooth scroll */
+html {
+  scroll-behavior: smooth;
+}
