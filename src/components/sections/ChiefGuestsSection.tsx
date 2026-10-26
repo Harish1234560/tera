@@ -6,13 +6,13 @@ const dignitaries = [
     name: "Dr. A. V. Pavan Kumar",
     title: "Professor & Assistant Dean",
     subtitle: "Ph.D. (BITS-Pilani, Hyderabad)",
-    image: "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=300&q=80",
+    image: "image.png",
   },
   {
     name: "Dr. Manavaalan Gunasekaran",
     title: "Assoc. Professor & Head",
     subtitle: "Ph.D. (IIT, Kanpur)",
-    image: "/hod.png", // replace with actual image path
+    image: "/image1.png", 
   },
 ];
 
@@ -21,13 +21,13 @@ const facultyCoordinators = [
     name: "Dr. Sarat Kumar Mishra",
     title: "Asst. Professor",
     subtitle: "Ph.D. (B.I.T., Mesra)",
-    image: "/faculty1.png",
+    image: "/image2.png",
   },
   {
     name: "Dr. Sovit Kumar Pradhan",
     title: "Asst. Professor",
     subtitle: "Ph.D. (NIT, Silchar)",
-    image: "/faculty2.png",
+    image: "/image3.png",
   },
 ];
 

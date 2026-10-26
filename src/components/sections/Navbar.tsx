@@ -41,11 +41,13 @@ const Navbar = () => {
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
         <Link to="/" className="flex items-center gap-2 shrink-0">
-          <div className="w-8 h-8 rounded-md bg-primary flex items-center justify-center">
-            <span className="text-primary-foreground font-bold text-sm font-body">T</span>
-          </div>
+          <img
+            src="/EEElogo.png"
+            alt="TERA Ignite 2K26 2.0 logo"
+            className="h-10 w-10 rounded-full object-cover"
+          />
           <div className="flex flex-col leading-tight">
-            <span className="font-body text-xs sm:text-sm font-semibold tracking-wider text-foreground">TERA 2K26</span>
+            <span className="font-body text-xs sm:text-sm font-semibold tracking-wider text-foreground">TERA IGNITE 2K26</span>
             <span className="font-body text-[9px] text-primary tracking-wider hidden sm:block">DEPARTMENT OF EEE</span>
           </div>
         </Link>

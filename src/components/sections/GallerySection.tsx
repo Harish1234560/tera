@@ -2,7 +2,7 @@ import { motion, useInView, AnimatePresence } from "framer-motion";
 import { useRef, useState, useEffect } from "react";
 import { X, ChevronLeft, ChevronRight } from "lucide-react";
 
-type GalleryYear = "2025" | "2024" | "2023";
+type GalleryYear = "2025" | "2024";
 
 interface GalleryImage {
   src: string;
@@ -29,16 +29,9 @@ const galleryByYear: Record<GalleryYear, GalleryImage[]> = {
     { src: "https://images.unsplash.com/photo-1556761175-5973dc0f32e7?w=600&q=80", alt: "Presentation", caption: "Student Presentations" },
     { src: "https://images.unsplash.com/photo-1558008258-3256797b43f3?w=600&q=80", alt: "Data viz", caption: "Data Visualization Contest" },
   ],
-  "2023": [
-    { src: "https://images.unsplash.com/photo-1492538368677-f6e0afe31dcc?w=600&q=80", alt: "Campus event", caption: "TERA 2K23 — Opening Day" },
-    { src: "https://images.unsplash.com/photo-1524178232363-1fb2b075b655?w=600&q=80", alt: "Classroom session", caption: "Workshop on ML Basics" },
-    { src: "https://images.unsplash.com/photo-1559136555-9303baea8ebd?w=600&q=80", alt: "Awards", caption: "Winners Felicitation" },
-    { src: "https://images.unsplash.com/photo-1511578314322-379afb476865?w=600&q=80", alt: "Event stage", caption: "Cultural Evening" },
-    { src: "https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=600&q=80", alt: "Crowd", caption: "Enthusiastic Audience" },
-  ],
 };
 
-const years: GalleryYear[] = ["2025", "2024", "2023"];
+const years: GalleryYear[] = ["2025", "2024"];
 
 export const GalleryStrip = () => {
   const scrollRef = useRef<HTMLDivElement>(null);

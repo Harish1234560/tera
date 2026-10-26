@@ -3,7 +3,6 @@ import { useRef } from "react";
 import { Clock, MapPin, Sparkles, Coffee, Mic, Trophy, Flag } from "lucide-react";
 
 interface ScheduleItem {
-  time: string;
   event: string;
   venue: string;
   type: "general" | "talk" | "tech" | "fun";
@@ -11,17 +10,23 @@ interface ScheduleItem {
 }
 
 const schedule: ScheduleItem[] = [
-  { time: "08:30 AM", event: "Registration & Check-in", venue: "Main Entrance", type: "general", icon: Flag },
-  { time: "09:00 AM", event: "Inaugural Ceremony", venue: "Auditorium", type: "general", icon: Sparkles },
-  { time: "09:45 AM", event: "Keynote: Future of Electrical Engineering", venue: "Auditorium", type: "talk", icon: Mic },
-  { time: "10:30 AM", event: "AI Alchemy & Code Nexus Begin", venue: "Lab 301 & 201", type: "tech", icon: Sparkles },
-  { time: "11:00 AM", event: "Data Quest Treasure Hunt", venue: "Campus Wide", type: "fun", icon: Sparkles },
-  { time: "12:00 PM", event: "Meme Factory & Tech Talks", venue: "Seminar Hall", type: "fun", icon: Sparkles },
-  { time: "01:00 PM", event: "Lunch Break & Networking", venue: "Cafeteria", type: "general", icon: Coffee },
-  { time: "02:00 PM", event: "Data Forge & Viz Odyssey", venue: "Lab 302 & Seminar Hall", type: "tech", icon: Sparkles },
-  { time: "03:30 PM", event: "Idea Spark Pitching", venue: "Seminar Hall", type: "fun", icon: Sparkles },
-  { time: "04:30 PM", event: "Awards & Valedictory", venue: "Auditorium", type: "general", icon: Trophy },
-  { time: "05:30 PM", event: "Closing & Farewell", venue: "Auditorium", type: "general", icon: Flag },
+  { event: "Registration & Check-in", venue: "Main Entrance", type: "general", icon: Flag },
+  { event: "Inaugural Ceremony", venue: "Auditorium", type: "general", icon: Sparkles },
+  { event: "Keynote: Future of Electrical Engineering", venue: "Auditorium", type: "talk", icon: Mic },
+  { event: "AI Alchemy & Code Nexus Begin", venue: "Lab 301 & 201", type: "tech", icon: Sparkles },
+  { event: "Data Quest Treasure Hunt", venue: "Campus Wide", type: "fun", icon: Sparkles },
+  { event: "Meme Factory & Tech Talks", venue: "Seminar Hall", type: "fun", icon: Sparkles },
+  { event: "Lunch Break & Networking", venue: "Cafeteria", type: "general", icon: Coffee },
+  { event: "Data Forge & Viz Odyssey", venue: "Lab 302 & Seminar Hall", type: "tech", icon: Sparkles },
+  { event: "Idea Spark Pitching", venue: "Seminar Hall", type: "fun", icon: Sparkles },
+  { event: "Awards & Valedictory", venue: "Auditorium", type: "general", icon: Trophy },
+  { event: "Closing & Farewell", venue: "Auditorium", type: "general", icon: Flag },
+];
+
+const firstDayCount = Math.ceil(schedule.length / 2);
+const scheduleDays = [
+  { date: "November 11, 2026", items: schedule.slice(0, firstDayCount) },
+  { date: "November 12, 2026", items: schedule.slice(firstDayCount) },
 ];
 
 const typeConfig: Record<string, { color: string; bg: string; border: string; label: string; dot: string }> = {
@@ -48,7 +53,7 @@ const ScheduleSection = () => {
           <p className="font-body text-sm tracking-[0.3em] uppercase text-secondary mb-3">Timeline</p>
           <h2 className="font-display text-3xl md:text-5xl font-bold text-gradient-gold mb-4">Event Schedule</h2>
           <p className="font-body text-muted-foreground max-w-xl mx-auto mb-8">
-            One day. Infinite possibilities. Here's the flow.
+            Two days of events, from 11:00 AM to 2:00 PM each day.
           </p>
 
           {/* Legend */}
@@ -62,20 +67,31 @@ const ScheduleSection = () => {
           </div>
         </motion.div>
 
-        {/* Timeline */}
-        <div className="relative">
-          {/* Central line */}
-          <div className="absolute left-5 md:left-1/2 md:-translate-x-px top-0 bottom-0 w-0.5">
-            <div className="w-full h-full bg-gradient-to-b from-primary/60 via-secondary/40 to-muted-foreground/20 rounded-full" />
+        {scheduleDays.map((day) => (
+          <div key={day.date} className="mb-16 last:mb-0">
+            <div className="mb-8 text-center">
+              <h3 className="font-display text-2xl md:text-3xl font-bold text-gradient-gold">
+                {day.date}
+              </h3>
+              <p className="mt-2 flex items-center justify-center gap-2 font-body text-sm text-muted-foreground">
+                <Clock className="h-4 w-4 text-primary" />
+                11:00 AM – 2:00 PM
+              </p>
+            </div>
+
+            <div className="relative">
+              <div className="absolute left-5 md:left-1/2 md:-translate-x-px top-0 bottom-0 w-0.5">
+                <div className="w-full h-full bg-gradient-to-b from-primary/60 via-secondary/40 to-muted-foreground/20 rounded-full" />
+              </div>
+
+              {day.items.map((item, i) => (
+                <TimelineCard key={item.event} item={item} index={i} isLeft={i % 2 === 0} />
+              ))}
+
+              <div className="absolute left-5 md:left-1/2 -translate-x-1/2 bottom-0 w-4 h-4 rounded-full bg-primary glow-gold" />
+            </div>
           </div>
-
-          {schedule.map((item, i) => (
-            <TimelineCard key={i} item={item} index={i} isLeft={i % 2 === 0} />
-          ))}
-
-          {/* End dot */}
-          <div className="absolute left-5 md:left-1/2 -translate-x-1/2 bottom-0 w-4 h-4 rounded-full bg-primary glow-gold" />
-        </div>
+        ))}
       </div>
     </section>
   );
@@ -111,8 +127,6 @@ const TimelineCard = ({ item, index, isLeft }: { item: ScheduleItem; index: numb
       <div className={`md:w-[calc(50%-2rem)] ${isLeft ? "md:pr-4 md:text-right" : "md:pl-4"}`}>
         <div className={`rounded-xl p-4 border ${config.border} ${config.bg} backdrop-blur-sm transition-all duration-300 hover:scale-[1.02]`}>
           <div className={`flex items-center gap-2 mb-2 ${isLeft ? "md:justify-end" : ""}`}>
-            <Clock className={`w-3.5 h-3.5 ${config.color}`} />
-            <span className={`font-body text-xs font-semibold ${config.color}`}>{item.time}</span>
             <span className={`text-[10px] px-2 py-0.5 rounded-full font-body font-medium ${config.bg} ${config.color} border ${config.border}`}>
               {config.label}
             </span>
