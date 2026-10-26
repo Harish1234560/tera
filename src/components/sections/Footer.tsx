@@ -30,11 +30,11 @@ const Footer = () => (
             </p>
             <p className="flex items-center gap-2 font-body text-base text-muted-foreground">
               <Phone className="w-5 h-5 text-primary shrink-0" />
-              +91 98765 43210
+              +91 6300481038
             </p>
             <p className="flex items-center gap-2 font-body text-base text-muted-foreground">
               <Mail className="w-5 h-5 text-primary shrink-0" />
-              dfesta2k26@mits.ac.in
+              teraeee@mits.ac.in
             </p>
           </div>
         </div>

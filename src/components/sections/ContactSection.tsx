@@ -62,7 +62,7 @@ const ContactSection = () => {
                   Phone
                 </h4>
                 <p className="font-body text-sm text-muted-foreground">
-                  +91 98765 43210
+                  +91 6300481038
                 </p>
               </div>
             </div>
@@ -75,7 +75,7 @@ const ContactSection = () => {
                   Email
                 </h4>
                 <p className="font-body text-sm text-muted-foreground">
-                  dfesta2k26@mits.ac.in
+                  teraeee@mits.ac.in
                 </p>
               </div>
             </div>

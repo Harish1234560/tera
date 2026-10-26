@@ -6,7 +6,7 @@ const dignitaries = [
     name: "Dr. A. V. Pavan Kumar",
     title: "Professor & Assistant Dean",
     subtitle: "Ph.D. (BITS-Pilani, Hyderabad)",
-    image: "image.png",
+    image: "/image.png",
   },
   {
     name: "Dr. Manavaalan Gunasekaran",
@@ -21,13 +21,13 @@ const facultyCoordinators = [
     name: "Dr. Sarat Kumar Mishra",
     title: "Asst. Professor",
     subtitle: "Ph.D. (B.I.T., Mesra)",
-    image: "/image2.png",
+    image: "/image3.png",
   },
   {
     name: "Dr. Sovit Kumar Pradhan",
     title: "Asst. Professor",
     subtitle: "Ph.D. (NIT, Silchar)",
-    image: "/image3.png",
+    image: "/image2.png",
   },
 ];
 
