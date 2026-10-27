@@ -8,6 +8,7 @@ import { AnimatePresence } from "framer-motion";
 import { lazy, Suspense } from "react";
 import ScrollToTop from "@/components/ScrollToTop";
 import PageTransitionLoader from "@/components/PageTransitionLoader";
+import SmoothScroll from "@/components/SmoothScroll";
 
 const Index = lazy(() => import("./pages/Index"));
 const EventsPage = lazy(() => import("./pages/EventsPage"));
@@ -45,6 +46,7 @@ const App = () => (
         <Toaster />
         <Sonner />
         <BrowserRouter>
+          <SmoothScroll />
           <ScrollToTop />
           <AnimatedRoutes />
         </BrowserRouter>

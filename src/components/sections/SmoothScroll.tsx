@@ -1,0 +1,1 @@
+export { default, getLenis } from "@/components/SmoothScroll";

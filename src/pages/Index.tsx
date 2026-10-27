@@ -27,7 +27,7 @@ const Index = () => {
           <div className="section-divider" />
           <ChiefGuestsSection />
           <div className="section-divider" />
-          <EventsSection />
+          <EventsSection solidCards />
         </PageLayout>
       </div>
     </>

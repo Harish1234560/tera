@@ -1,93 +1,102 @@
-import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { useEffect, useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
 
-const TARGET_DATE = new Date(2026, 10, 11, 8, 30, 0);
+/* Change this to your real start time */
+const TARGET = new Date("2026-11-11T09:00:00+05:30").getTime();
 
-function getTimeLeft() {
-  const diff = TARGET_DATE.getTime() - Date.now();
-
-  if (diff <= 0) {
-    return { days: 0, hours: 0, minutes: 0, seconds: 0 };
-  }
-
-  return {
-    days: Math.floor(diff / (1000 * 60 * 60 * 24)),
-    hours: Math.floor((diff / (1000 * 60 * 60)) % 24),
-    minutes: Math.floor((diff / (1000 * 60)) % 60),
-    seconds: Math.floor((diff / 1000) % 60),
-  };
+interface Props {
+  target?: Date | string | number;
 }
 
-const FlipNumber = ({
-  value,
-  flipKey,
-}: {
-  value: number;
-  flipKey: string | number;
-}) => {
-  return (
-    <div className="relative w-16 h-16 md:w-24 md:h-24 rounded-xl bg-card border border-border flex items-center justify-center shadow-md overflow-hidden">
-      <AnimatePresence mode="wait">
-        <motion.span
-          key={flipKey}
-          initial={{ rotateX: -90, opacity: 0 }}
-          animate={{ rotateX: 0, opacity: 1 }}
-          exit={{ rotateX: 90, opacity: 0 }}
-          transition={{ duration: 0.5 }}
-          className="text-2xl md:text-4xl font-bold text-amber-400"
-          style={{ fontFamily: "var(--font-display)" }}
-        >
-          {String(value).padStart(2, "0")}
-        </motion.span>
-      </AnimatePresence>
-    </div>
-  );
+const calc = (target: number) => {
+  const diff = Math.max(0, target - Date.now());
+  const s = Math.floor(diff / 1000);
+  return {
+    days: Math.floor(s / 86400),
+    hours: Math.floor((s % 86400) / 3600),
+    minutes: Math.floor((s % 3600) / 60),
+    seconds: s % 60,
+    done: diff === 0,
+  };
 };
 
-const CountdownTimer = () => {
-  const [time, setTime] = useState(getTimeLeft());
+const pad = (n: number) => String(n).padStart(2, "0");
+
+const Digits = ({ value }: { value: string }) => (
+  <span className="relative block h-[1.15em] overflow-hidden leading-[1.15]">
+    <AnimatePresence mode="popLayout" initial={false}>
+      <motion.span
+        key={value}
+        initial={{ y: "100%", opacity: 0 }}
+        animate={{ y: "0%", opacity: 1 }}
+        exit={{ y: "-100%", opacity: 0 }}
+        transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+        className="block text-center"
+      >
+        {value}
+      </motion.span>
+    </AnimatePresence>
+  </span>
+);
+
+const CountdownTimer = ({ target }: Props) => {
+  const t = target ? new Date(target).getTime() : TARGET;
+  const [time, setTime] = useState(() => calc(t));
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setTime(getTimeLeft());
-    }, 1000);
+    setTime(calc(t));
+    const id = setInterval(() => setTime(calc(t)), 1000);
+    return () => clearInterval(id);
+  }, [t]);
 
-    return () => clearInterval(interval);
-  }, []);
+  if (time.done) {
+    return (
+      <div className="mx-auto inline-flex items-center gap-2.5 rounded-full border border-red-400/40 bg-red-500/10 px-6 py-3 font-body text-sm font-bold uppercase tracking-[0.2em] text-red-300">
+        <span className="h-2 w-2 animate-pulse rounded-full bg-red-500 shadow-[0_0_10px_rgba(255,60,40,0.9)]" />
+        The event is live
+      </div>
+    );
+  }
 
-  const blocks = [
-    { label: "DAYS", value: time.days },
-    { label: "HOURS", value: time.hours },
-    { label: "MINUTES", value: time.minutes },
-    { label: "SECONDS", value: time.seconds, flip: true },
+  const units = [
+    { label: "Days", value: pad(time.days), accent: false },
+    { label: "Hours", value: pad(time.hours), accent: false },
+    { label: "Minutes", value: pad(time.minutes), accent: false },
+    { label: "Seconds", value: pad(time.seconds), accent: true },
   ];
 
   return (
-    <div className="flex gap-3 md:gap-6 justify-center items-center">
-      {blocks.map((b, i) => (
-        <div key={b.label} className="flex items-center gap-3 md:gap-6">
-          <div className="flex flex-col items-center">
-            <FlipNumber
-              value={b.value}
-              flipKey={b.flip ? b.value : b.label} 
-              // 🔥 Only seconds re-animate
-            />
+    <div className="mx-auto w-full max-w-[22rem] sm:max-w-md">
+      <p className="mb-3 flex items-center justify-center gap-2 font-body text-[10px] font-semibold uppercase tracking-[0.3em] text-white/55">
+        <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-amber-400" />
+        Event starts in
+      </p>
 
-            <span className="text-xs md:text-sm tracking-[0.3em] text-white mt-2 font-body uppercase font-semibold">
-              {b.label}
+      <div
+        className="grid grid-cols-4 gap-2 sm:gap-3"
+        role="timer"
+        aria-live="off"
+        aria-label={`${time.days} days ${time.hours} hours ${time.minutes} minutes ${time.seconds} seconds remaining`}
+      >
+        {units.map((u) => (
+          <div
+            key={u.label}
+            className="relative min-w-0 overflow-hidden rounded-2xl border border-white/15 bg-gradient-to-b from-white/[0.12] to-black/50 px-1 pb-2.5 pt-3 text-center shadow-[inset_0_1px_0_rgba(255,255,255,0.12)] sm:pb-3 sm:pt-4"
+          >
+            <span className="pointer-events-none absolute inset-x-3 top-0 h-px bg-gradient-to-r from-transparent via-amber-300/60 to-transparent" />
+            <div
+              className={`font-display text-[clamp(1.6rem,8.5vw,2.6rem)] font-bold tabular-nums ${
+                u.accent ? "text-red-400" : "text-white"
+              }`}
+            >
+              <Digits value={u.value} />
+            </div>
+            <span className="mt-1 block font-body text-[9px] font-semibold uppercase tracking-[0.16em] text-white/55 sm:text-[10px] sm:tracking-[0.2em]">
+              {u.label}
             </span>
           </div>
-
-          {i < blocks.length - 1 && (
-            <span
-              className="text-2xl md:text-4xl font-bold text-amber-300/60 -mt-4"
-              style={{ fontFamily: "var(--font-display)" }}
-            >
-              :
-            </span>
-          )}
-        </div>
-      ))}
+        ))}
+      </div>
     </div>
   );
 };
