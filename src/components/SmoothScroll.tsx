@@ -7,17 +7,18 @@ gsap.registerPlugin(ScrollTrigger);
 
 let instance: Lenis | null = null;
 
+/** Lets other components (e.g. modals) pause/resume smooth scrolling. */
 export const getLenis = () => instance;
 
 const SmoothScroll = () => {
   useEffect(() => {
-    if (typeof window === "undefined") return;
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
     const lenis = new Lenis({
       duration: 1.15,
       easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       smoothWheel: true,
+      // Touch stays native on purpose. Add `syncTouch: true` to smooth it.
     });
     instance = lenis;
 

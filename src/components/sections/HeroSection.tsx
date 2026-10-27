@@ -276,8 +276,6 @@ const HeroSection = () => {
           transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
           className="flex flex-col items-center gap-1 text-white/50"
         >
-          <span className="font-body text-[9px] uppercase tracking-[0.35em]">Scroll</span>
-          <ChevronDown className="h-4 w-4" />
         </motion.div>
       </motion.div>
     </section>
