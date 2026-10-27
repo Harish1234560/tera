@@ -35,11 +35,24 @@ const leaders: Leader[] = [
   {
     role: "Vice President",
     icon: Award,
-    person: { name: "A. Venkatesh", phone: "9014790550" },
+    person: {
+      name: "B.Venkateshwara",
+      phone: "9014790550",
+      image: "/images/vp.jpeg",
+    },
   },
-  {
+
+{
     role: "Events Student Coordinator",
     icon: Star,
+    
+    person: { name: "N.Sai Rohith", phone: "6300481038" },
+  },
+
+  {
+    role: "Event Student Coordinator",
+    icon: Star,
+    
     person: { name: "S Abdul", phone: "8978876609" },
   },
 ];
