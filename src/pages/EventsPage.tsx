@@ -6,7 +6,7 @@ const EventsPage = () => (
   <PageLayout>
     <ThreeBackground />
     <div className="pt-20" />
-    <EventsSection />
+    <EventsSection solidCards />
   </PageLayout>
 );
 
