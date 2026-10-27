@@ -23,11 +23,11 @@ const Index = () => {
           <HeroSection />
           <div className="section-divider" />
           <GalleryStrip />
-          <AboutSection />
+          <EventsSection solidCards />
           <div className="section-divider" />
           <ChiefGuestsSection />
           <div className="section-divider" />
-          <EventsSection solidCards />
+          <AboutSection />
         </PageLayout>
       </div>
     </>

@@ -29,6 +29,7 @@ const HeroSection = () => {
   const [imgOk, setImgOk] = useState(true);
   const [mobileImgOk, setMobileImgOk] = useState(true);
   const [showVideo, setShowVideo] = useState(false);
+  const [videoReady, setVideoReady] = useState(false);
 
   useEffect(() => {
     setShowVideo(!window.matchMedia("(prefers-reduced-motion: reduce)").matches);
@@ -108,7 +109,11 @@ const HeroSection = () => {
             playsInline
             preload="metadata"
             poster={imgOk ? HERO_IMAGE : undefined}
-            className="absolute inset-0 h-full w-full object-cover"
+            onLoadStart={() => setVideoReady(false)}
+            onCanPlay={() => setVideoReady(true)}
+            className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-700 ${
+              videoReady ? "opacity-100" : "opacity-0"
+            }`}
           >
             <source
               src={HERO_VIDEO_MOBILE}

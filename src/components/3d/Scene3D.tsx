@@ -16,7 +16,6 @@ const Scene3D = () => {
           <ambientLight intensity={0.3} />
           <directionalLight position={[5, 5, 5]} intensity={0.5} color="#d4a853" />
           <ParticleField count={500} />
-          <DataOrb />
         </Suspense>
       </Canvas>
     </div>
