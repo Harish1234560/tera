@@ -13,7 +13,7 @@ const HERO_IMAGE = "/images/hero-bg.jpg";
 /* Optional portrait crop for phones: public/images/hero-bg-mobile.jpg */
 const HERO_IMAGE_MOBILE = "/images/hero-bg-mobile.jpg";
 const HERO_VIDEO = "/videos/hero-bg.mp4";
-const VIDEO_ON_MOBILE = false;
+const HERO_VIDEO_MOBILE = "/videos/hero-bg-mobile.mp4";
 
 const CIRCUIT =
   "url(\"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240' fill='none' stroke='white' stroke-width='1' stroke-linecap='round'><path d='M0 60h70l20 20h60M60 0v40l20 20M240 150h-80l-20 20v70M120 240v-40l20-20h50l20-20h50'/><circle cx='70' cy='60' r='3'/><circle cx='150' cy='80' r='3'/><circle cx='160' cy='150' r='3'/><circle cx='190' cy='180' r='3'/></svg>\")";
@@ -30,12 +30,8 @@ const HeroSection = () => {
   const [mobileImgOk, setMobileImgOk] = useState(true);
   const [showVideo, setShowVideo] = useState(false);
 
-  /* decide on video once, on the client */
   useEffect(() => {
-    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const saveData = (navigator as any).connection?.saveData === true;
-    const desktop = window.matchMedia("(min-width: 768px)").matches;
-    setShowVideo(!reduced && !saveData && (desktop || VIDEO_ON_MOBILE));
+    setShowVideo(!window.matchMedia("(prefers-reduced-motion: reduce)").matches);
   }, []);
 
   /* scroll parallax: background drifts, content fades as you leave */
@@ -104,7 +100,6 @@ const HeroSection = () => {
           </picture>
         )}
 
-        {/* video layer (desktop / opt-in) */}
         {showVideo && (
           <video
             autoPlay
@@ -113,19 +108,25 @@ const HeroSection = () => {
             playsInline
             preload="metadata"
             poster={imgOk ? HERO_IMAGE : undefined}
-            className="absolute inset-0 h-full w-full object-cover opacity-60"
+            className="absolute inset-0 h-full w-full object-cover"
           >
+            <source
+              src={HERO_VIDEO_MOBILE}
+              type="video/mp4"
+              media="(max-width: 767px)"
+            />
             <source src={HERO_VIDEO} type="video/mp4" />
           </video>
         )}
+
       </div>
 
       {/* legibility + depth */}
-      <div className="pointer-events-none absolute inset-0 z-[1] bg-gradient-to-b from-black/70 via-black/35 to-black/85" />
+      <div className="pointer-events-none absolute inset-0 z-[1] bg-gradient-to-b from-black/40 via-black/15 to-black/60" />
       <div
         className="pointer-events-none absolute inset-0 z-[1]"
         style={{
-          background: "radial-gradient(ellipse at 50% 45%, transparent 40%, rgba(0,0,0,0.7) 100%)",
+          background: "radial-gradient(ellipse at 50% 45%, transparent 40%, rgba(0,0,0,0.4) 100%)",
         }}
       />
 
