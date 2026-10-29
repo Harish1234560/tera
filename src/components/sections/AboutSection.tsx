@@ -43,8 +43,8 @@ const aboutBlocks: Block[] = [
   {
     icon: Sparkles,
     title: "About TERA 2K26",
-    subtitle: "National Level One-Day Symposium",
-    desc: "TERA 2K26 is a National Level One-Day Symposium organized by the Department of EEE. It brings together students, researchers, and industry experts for competitions, workshops, tech talks, and creative showcases celebrating electrical engineering and emerging technologies.",
+    subtitle: "National Level Two-Days Symposium",
+    desc: "TERA 2K26 is a National Level Two-Days Symposium organized by the Department of EEE. It brings together students, researchers, and industry experts for competitions, workshops, tech talks, and creative showcases celebrating electrical engineering and emerging technologies.",
     image:
       "https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&fit=crop&w=1200&q=80",
   },

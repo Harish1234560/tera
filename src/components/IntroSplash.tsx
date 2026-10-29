@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import gsap from "gsap";
 import { ArrowRight } from "lucide-react";
 
@@ -6,9 +6,60 @@ const logo = "/EEElogo.png";
 
 const TITLE = "TERA";
 const ACCENT = "2K26";
+const SEGMENTS = 28;
 
 const GRAIN =
   "url(\"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)' opacity='.55'/></svg>\")";
+
+const RAYS =
+  "conic-gradient(from 0deg, transparent 0deg, rgba(255,70,40,0.16) 10deg, transparent 22deg, transparent 60deg, rgba(255,184,0,0.10) 72deg, transparent 84deg, transparent 120deg, rgba(255,70,40,0.14) 132deg, transparent 144deg, transparent 180deg, rgba(255,184,0,0.10) 192deg, transparent 204deg, transparent 240deg, rgba(255,70,40,0.14) 252deg, transparent 264deg, transparent 300deg, rgba(255,184,0,0.10) 312deg, transparent 324deg)";
+
+/* ---------- seeded circuit-trace generator (same layout every visit) ---------- */
+const mulberry32 = (seed: number) => () => {
+  seed |= 0;
+  seed = (seed + 0x6d2b79f5) | 0;
+  let t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
+  t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+  return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+};
+
+const DIRS = Array.from({ length: 8 }, (_, i) => {
+  const a = (i * Math.PI) / 4;
+  return [Math.cos(a), Math.sin(a)] as const;
+});
+
+interface Trace {
+  d: string;
+  end: [number, number];
+}
+
+/* units: 100 = logo diameter, logo centre = (0,0) */
+const buildTraces = (count: number): Trace[] => {
+  const rnd = mulberry32(2026);
+  const out: Trace[] = [];
+  for (let k = 0; k < count; k++) {
+    const base = (k / count) * Math.PI * 2 + (rnd() - 0.5) * 0.25;
+    let x = Math.cos(base) * 66;
+    let y = Math.sin(base) * 66;
+    let di = ((Math.round(base / (Math.PI / 4)) % 8) + 8) % 8;
+    const pts: [number, number][] = [[x, y]];
+    const segs = 3 + Math.floor(rnd() * 3);
+    for (let s = 0; s < segs; s++) {
+      const len = 22 + rnd() * 48;
+      x += DIRS[di][0] * len;
+      y += DIRS[di][1] * len;
+      pts.push([x, y]);
+      const turn = rnd() < 0.5 ? -1 : 1;
+      di = (di + turn + 8) % 8;
+      if (DIRS[di][0] * x + DIRS[di][1] * y < 0) di = (di - 2 * turn + 16) % 8;
+    }
+    out.push({
+      d: pts.map((p, i) => `${i === 0 ? "M" : "L"}${p[0].toFixed(1)} ${p[1].toFixed(1)}`).join(" "),
+      end: pts[pts.length - 1],
+    });
+  }
+  return out;
+};
 
 const Word = ({ text, className }: { text: string; className: string }) => (
   <span className="inline-flex" aria-hidden="true">
@@ -35,6 +86,11 @@ const IntroSplash = ({ onComplete }: { onComplete: () => void }) => {
   onCompleteRef.current = onComplete;
 
   const [gone, setGone] = useState(false);
+
+  const traces = useMemo(
+    () => buildTraces(typeof window !== "undefined" && window.innerWidth < 768 ? 10 : 18),
+    []
+  );
 
   /* ---------- dismiss: iris-close reveal of the site ---------- */
   const dismiss = useCallback(() => {
@@ -106,6 +162,8 @@ const IntroSplash = ({ onComplete }: { onComplete: () => void }) => {
       /* idle loops */
       gsap.to(q("[data-spin-a]"), { rotation: 360, duration: 26, ease: "none", repeat: -1 });
       gsap.to(q("[data-spin-b]"), { rotation: -360, duration: 38, ease: "none", repeat: -1 });
+      gsap.to(q("[data-rays]"), { rotation: 360, duration: 70, ease: "none", repeat: -1 });
+      gsap.to(q("[data-rim]"), { rotation: 360, duration: 6, ease: "none", repeat: -1 });
       gsap.to(q("[data-glow]"), {
         scale: 1.15,
         duration: 2.4,
@@ -120,18 +178,14 @@ const IntroSplash = ({ onComplete }: { onComplete: () => void }) => {
         yoyo: true,
         repeat: -1,
       });
-      gsap.fromTo(
-        q("[data-scan]"),
-        { y: -10 },
-        {
-          y: window.innerHeight,
-          duration: 3.2,
-          ease: "none",
-          repeat: -1,
-          repeatDelay: 1.2,
-          delay: 1,
-        }
-      );
+
+      /* neon flicker on the accent, in short bursts */
+      gsap
+        .timeline({ repeat: -1, repeatDelay: 3.2, delay: 4 })
+        .to(q("[data-accent]"), { opacity: 0.35, duration: 0.05 })
+        .to(q("[data-accent]"), { opacity: 1, duration: 0.05 })
+        .to(q("[data-accent]"), { opacity: 0.55, duration: 0.05 })
+        .to(q("[data-accent]"), { opacity: 1, duration: 0.14 });
 
       /* pointer parallax (desktop only) */
       if (window.matchMedia("(pointer: fine)").matches) {
@@ -157,8 +211,7 @@ const IntroSplash = ({ onComplete }: { onComplete: () => void }) => {
       const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
       tlRef.current = tl;
 
-      tl.fromTo(q("[data-grid]"), { opacity: 0 }, { opacity: 1, duration: 1.4 }, 0)
-        .fromTo(q("[data-hud]"), { opacity: 0, scale: 0.9 }, { opacity: 1, scale: 1, duration: 0.9, stagger: 0.08 }, 0.3)
+      tl.fromTo(q("[data-hud]"), { opacity: 0, scale: 0.9 }, { opacity: 1, scale: 1, duration: 0.9, stagger: 0.08 }, 0.3)
 
         /* strike -> flash -> logo */
         .fromTo(
@@ -169,24 +222,56 @@ const IntroSplash = ({ onComplete }: { onComplete: () => void }) => {
         )
         .set(q("[data-flash]"), { opacity: 1, scale: 0.2 }, 0.7)
         .to(q("[data-flash]"), { scale: 2.6, opacity: 0, duration: 0.9, ease: "power2.out" }, 0.7)
+        .set(q("[data-shock]"), { scale: 0.6, opacity: 0.9 }, 0.72)
+        .to(q("[data-shock]"), { scale: 4.5, opacity: 0, duration: 1.6, ease: "power2.out", stagger: 0.18 }, 0.72)
         .to(q("[data-bolt]"), { opacity: 0, duration: 0.3 }, 0.75)
         .fromTo(q("[data-glow-wrap]"), { opacity: 0 }, { opacity: 1, duration: 1.2 }, 0.7)
+        .fromTo(q("[data-rays]"), { opacity: 0 }, { opacity: 1, duration: 1.8 }, 0.8)
         .fromTo(
           q("[data-medal]"),
           { scale: 0.6, opacity: 0 },
           { scale: 1, opacity: 1, duration: 1.1, ease: "expo.out" },
           0.7
         )
+        .fromTo(q("[data-rim]"), { opacity: 0 }, { opacity: 1, duration: 1.1 }, 0.9)
         .fromTo(
           q("[data-ring-draw]"),
           { strokeDashoffset: 1 },
           { strokeDashoffset: 0, duration: 1.5, ease: "power2.inOut" },
           0.85
         )
-        .fromTo(q("[data-ring-fade]"), { opacity: 0 }, { opacity: 1, duration: 1.1, stagger: 0.15 }, 0.95)
+        .fromTo(q("[data-ring-fade]"), { opacity: 0 }, { opacity: 1, duration: 1.1, stagger: 0.15 }, 0.95);
 
-        /* text */
-        .fromTo(q("[data-dept]"), { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.8 }, 1.2)
+      /* circuit traces bloom outward with the shockwave */
+      root.querySelectorAll<SVGPathElement>("[data-trace]").forEach((el, i) => {
+        const len = el.getTotalLength();
+        gsap.set(el, { strokeDasharray: len, strokeDashoffset: len });
+        tl.to(el, { strokeDashoffset: 0, duration: 1.4, ease: "power2.out" }, 0.8 + i * 0.05);
+      });
+      tl.fromTo(
+        q("[data-node]"),
+        { opacity: 0, scale: 0.2, transformOrigin: "50% 50%" },
+        { opacity: 1, scale: 1, duration: 0.5, stagger: 0.04 },
+        1.7
+      );
+
+      /* current pulses running along the traces */
+      root.querySelectorAll<SVGGElement>("[data-pulse-g]").forEach((g, i) => {
+        const paths = Array.from(g.querySelectorAll<SVGPathElement>("path"));
+        const len = paths[0].getTotalLength();
+        gsap.set(paths, { strokeDasharray: `6 ${len + 10}`, strokeDashoffset: 6 });
+        gsap.to(paths, {
+          strokeDashoffset: -len,
+          duration: 1.6 + ((i * 37) % 17) / 10,
+          ease: "power1.in",
+          repeat: -1,
+          repeatDelay: 0.4 + ((i * 53) % 20) / 10,
+          delay: 2.1 + ((i * 29) % 15) / 10,
+        });
+      });
+
+      /* text */
+      tl.fromTo(q("[data-dept]"), { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.8 }, 1.2)
         .fromTo(q("[data-rule]"), { scaleX: 0 }, { scaleX: 1, duration: 0.9 }, 1.25)
         .fromTo(q("[data-presents]"), { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 0.7 }, 1.4)
         .fromTo(
@@ -212,15 +297,32 @@ const IntroSplash = ({ onComplete }: { onComplete: () => void }) => {
           { opacity: 0, y: 20, scale: 0.96 },
           { opacity: 1, y: 0, scale: 1, duration: 0.7 },
           2.7
-        )
-
-        /* the progress bar doubles as the auto-continue timer */
-        .fromTo(
-          q("[data-progress]"),
-          { scaleX: 0 },
-          { scaleX: 1, duration: 3.4, ease: "none", onComplete: dismiss },
-          2.8
         );
+
+      /* charging meter doubles as the auto-continue timer */
+      const segs = q("[data-seg]") as HTMLElement[];
+      const pct = root.querySelector<HTMLElement>("[data-pct]");
+      const prog = { v: 0 };
+      let lit = 0;
+      tl.to(
+        prog,
+        {
+          v: 100,
+          duration: 3.4,
+          ease: "none",
+          onUpdate: () => {
+            const n = Math.floor((prog.v / 100) * segs.length);
+            while (lit < n) {
+              const s = segs[lit++];
+              s.style.opacity = "1";
+              s.style.boxShadow = "0 0 8px rgba(255,120,40,0.8)";
+            }
+            if (pct) pct.textContent = `${Math.round(prog.v)}%`;
+          },
+          onComplete: dismiss,
+        },
+        2.8
+      );
     }, root);
 
     return () => {
@@ -342,23 +444,8 @@ const IntroSplash = ({ onComplete }: { onComplete: () => void }) => {
         className="absolute inset-0"
         style={{
           background:
-            "radial-gradient(60% 45% at 50% 38%, rgba(255,60,40,0.16), transparent 70%), radial-gradient(55% 40% at 50% 100%, rgba(255,184,0,0.10), transparent 70%)",
+            "radial-gradient(60% 45% at 50% 38%, rgba(255,60,40,0.20), transparent 70%), radial-gradient(55% 40% at 50% 100%, rgba(255,184,0,0.12), transparent 70%), radial-gradient(40% 30% at 0% 0%, rgba(255,60,40,0.08), transparent 70%)",
         }}
-      />
-      <div
-        data-grid
-        className="absolute inset-0"
-        style={{
-          backgroundImage:
-            "linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px)",
-          backgroundSize: "56px 56px",
-          maskImage: "radial-gradient(70% 55% at 50% 38%, #000 25%, transparent 100%)",
-          WebkitMaskImage: "radial-gradient(70% 55% at 50% 38%, #000 25%, transparent 100%)",
-        }}
-      />
-      <div
-        data-scan
-        className="pointer-events-none absolute left-0 top-0 h-px w-full bg-gradient-to-r from-transparent via-red-500/60 to-transparent"
       />
       <canvas
         ref={canvasRef}
@@ -376,11 +463,25 @@ const IntroSplash = ({ onComplete }: { onComplete: () => void }) => {
         style={{ backgroundImage: GRAIN }}
       />
 
-      {/* ---------- HUD corner brackets ---------- */}
+      {/* ---------- HUD corners + labels ---------- */}
       <span data-hud className="pointer-events-none absolute left-4 top-4 h-5 w-5 border-l border-t border-white/30" style={{ marginTop: "env(safe-area-inset-top)" }} />
       <span data-hud className="pointer-events-none absolute right-4 top-4 h-5 w-5 border-r border-t border-white/30" style={{ marginTop: "env(safe-area-inset-top)" }} />
       <span data-hud className="pointer-events-none absolute bottom-4 left-4 h-5 w-5 border-b border-l border-white/30" style={{ marginBottom: "env(safe-area-inset-bottom)" }} />
       <span data-hud className="pointer-events-none absolute bottom-4 right-4 h-5 w-5 border-b border-r border-white/30" style={{ marginBottom: "env(safe-area-inset-bottom)" }} />
+      <span
+        data-hud
+        className="pointer-events-none absolute left-11 top-4 font-body text-[9px] font-semibold uppercase tracking-[0.3em] text-white/35"
+        style={{ marginTop: "calc(env(safe-area-inset-top) + 3px)" }}
+      >
+        MITS · EEE
+      </span>
+      <span
+        data-hud
+        className="pointer-events-none absolute right-11 top-4 font-body text-[9px] font-semibold uppercase tracking-[0.3em] text-white/35"
+        style={{ marginTop: "calc(env(safe-area-inset-top) + 3px)" }}
+      >
+        Nov 11–12 · 2026
+      </span>
 
       {/* ---------- content ---------- */}
       <div
@@ -395,6 +496,49 @@ const IntroSplash = ({ onComplete }: { onComplete: () => void }) => {
         <div data-parallax className="relative mb-8 md:mb-10">
           <div data-float className="relative">
             <div className="relative aspect-square w-[min(54vw,34dvh,300px)]">
+              {/* light rays */}
+              <div className="pointer-events-none absolute left-1/2 top-1/2 h-[900%] w-[900%] -translate-x-1/2 -translate-y-1/2">
+                <div
+                  data-rays
+                  className="h-full w-full will-change-transform"
+                  style={{
+                    background: RAYS,
+                    WebkitMaskImage: "radial-gradient(circle, #000 0%, transparent 60%)",
+                    maskImage: "radial-gradient(circle, #000 0%, transparent 60%)",
+                  }}
+                />
+              </div>
+
+              {/* circuit traces (100 units = logo diameter) */}
+              <div className="pointer-events-none absolute left-1/2 top-1/2 h-[600%] w-[600%] -translate-x-1/2 -translate-y-1/2">
+                <svg viewBox="-300 -300 600 600" className="h-full w-full" fill="none" aria-hidden="true">
+                  {traces.map((t, i) => (
+                    <g key={i}>
+                      <path
+                        data-trace
+                        d={t.d}
+                        stroke="rgba(255,120,60,0.38)"
+                        strokeWidth="0.35"
+                        strokeLinejoin="round"
+                      />
+                      <circle
+                        data-node
+                        cx={t.end[0]}
+                        cy={t.end[1]}
+                        r="1.3"
+                        stroke="rgba(255,170,70,0.85)"
+                        strokeWidth="0.3"
+                        fill="#050507"
+                      />
+                      <g data-pulse-g>
+                        <path d={t.d} stroke="rgba(255,90,40,0.35)" strokeWidth="1.8" strokeDasharray="0 9999" />
+                        <path d={t.d} stroke="#fff1d6" strokeWidth="0.7" strokeDasharray="0 9999" />
+                      </g>
+                    </g>
+                  ))}
+                </svg>
+              </div>
+
               {/* glow */}
               <div
                 data-glow-wrap
@@ -409,6 +553,10 @@ const IntroSplash = ({ onComplete }: { onComplete: () => void }) => {
                   }}
                 />
               </div>
+
+              {/* shockwave rings */}
+              <div data-shock className="pointer-events-none absolute inset-0 rounded-full border border-red-400/70 opacity-0" />
+              <div data-shock className="pointer-events-none absolute inset-0 rounded-full border border-amber-300/50 opacity-0" />
 
               {/* lightning bolt: ends at the centre of the logo */}
               <svg
@@ -484,6 +632,16 @@ const IntroSplash = ({ onComplete }: { onComplete: () => void }) => {
                 />
               </svg>
 
+              {/* spinning gradient rim (the medallion covers its centre) */}
+              <div
+                data-rim
+                className="pointer-events-none absolute -inset-[4px] z-[9] rounded-full will-change-transform"
+                style={{
+                  background:
+                    "conic-gradient(from 0deg, #ff2d2d, #ffb400 25%, transparent 45%, transparent 55%, #ff7a1a 75%, #ff2d2d)",
+                }}
+              />
+
               {/* medallion */}
               <div
                 data-medal
@@ -524,7 +682,7 @@ const IntroSplash = ({ onComplete }: { onComplete: () => void }) => {
         </div>
 
         {/* department */}
-        <div data-dept className="flex items-center gap-3">
+        <div data-dept className="relative z-[1] flex items-center gap-3">
           <span data-rule className="h-px w-8 origin-right bg-gradient-to-l from-red-500/80 to-transparent md:w-14" />
           <span className="text-[11px] font-semibold uppercase tracking-[0.38em] text-white/70 md:text-xs">
             Department of EEE
@@ -534,14 +692,14 @@ const IntroSplash = ({ onComplete }: { onComplete: () => void }) => {
 
         <p
           data-presents
-          className="mt-3 text-[10px] uppercase tracking-[0.5em] text-amber-300/80"
+          className="relative z-[1] mt-3 text-[10px] uppercase tracking-[0.5em] text-amber-300/80"
         >
           Presents
         </p>
 
         {/* title */}
         <h1
-          className="relative mt-3 overflow-hidden font-display text-[clamp(2.6rem,14vw,7rem)] font-black leading-[1.05] tracking-tight"
+          className="relative z-[1] mt-3 overflow-hidden font-display text-[clamp(2.6rem,14vw,7rem)] font-black leading-[1.05] tracking-tight"
           style={{ filter: "drop-shadow(0 0 22px rgba(255,80,40,0.35))" }}
         >
           <span className="sr-only">
@@ -552,46 +710,52 @@ const IntroSplash = ({ onComplete }: { onComplete: () => void }) => {
             className="bg-gradient-to-b from-white via-amber-100 to-amber-300 bg-clip-text text-transparent"
           />
           <span className="inline-block w-[0.25em]" aria-hidden="true" />
-          <Word
-            text={ACCENT}
-            className="bg-gradient-to-b from-red-400 via-red-500 to-orange-500 bg-clip-text italic text-transparent"
-          />
+          <span data-accent className="inline-flex">
+            <Word
+              text={ACCENT}
+              className="bg-gradient-to-b from-red-400 via-red-500 to-orange-500 bg-clip-text italic text-transparent"
+            />
+          </span>
           <span
             data-sheen
             className="pointer-events-none absolute inset-y-0 left-0 w-1/3 -skew-x-12 bg-gradient-to-r from-transparent via-white/80 to-transparent mix-blend-overlay"
           />
         </h1>
 
-        <p data-fade className="mt-4 max-w-sm text-sm leading-relaxed text-white/80 md:max-w-xl md:text-base">
+        <p data-fade className="relative z-[1] mt-4 max-w-sm text-sm leading-relaxed text-white/80 md:max-w-xl md:text-base">
           Madanapalle Institute of Technology &amp; Science
           <br />
           <span className="text-white/55">(Deemed to be University)</span>
         </p>
 
-        <p
-          data-fade
-          className="mt-3 hidden max-w-md text-xs leading-relaxed text-white/50 md:max-w-xl md:text-sm [@media(min-height:700px)]:block"
-        >
-          A National Level One-Day Symposium celebrating electrical engineering,
-          innovation, and the future of technology
-        </p>
-
-        {/* CTA + progress */}
-        <div data-cta className="mt-7 flex flex-col items-center gap-4">
+        {/* CTA + charging meter */}
+        <div data-cta className="relative z-[1] mt-7 flex flex-col items-center gap-4">
           <button
             type="button"
-            className="group relative inline-flex min-h-[48px] items-center gap-2 overflow-hidden rounded-full border border-white/15 bg-white/[0.06] px-7 py-3 text-xs font-bold uppercase tracking-[0.26em] text-white transition-colors hover:border-white/30"
+            className="group relative inline-flex min-h-[48px] items-center gap-2 overflow-hidden rounded-full border border-white/15 bg-white/[0.06] px-7 py-3 text-xs font-bold uppercase tracking-[0.26em] text-white backdrop-blur-sm transition-colors hover:border-white/30"
           >
             <span className="absolute inset-0 bg-gradient-to-r from-red-600/30 via-orange-500/25 to-amber-400/30" />
             <span className="relative">Enter the Experience</span>
             <ArrowRight className="relative h-4 w-4 transition-transform group-hover:translate-x-1" />
           </button>
 
-          <div className="h-[2px] w-40 overflow-hidden rounded-full bg-white/10">
-            <div
-              data-progress
-              className="h-full w-full origin-left bg-gradient-to-r from-red-500 to-amber-400"
-            />
+          <div className="w-[min(78vw,260px)]">
+            <div className="mb-2 flex items-center justify-between font-body text-[10px] font-semibold uppercase tracking-[0.3em] text-white/45">
+              <span>Charging</span>
+              <span data-pct className="tabular-nums text-amber-300">
+                0%
+              </span>
+            </div>
+            <div className="flex items-end gap-[3px]">
+              {Array.from({ length: SEGMENTS }).map((_, i) => (
+                <span
+                  key={i}
+                  data-seg
+                  className="h-3 flex-1 rounded-[1px] bg-gradient-to-t from-red-600 to-amber-300"
+                  style={{ opacity: 0.14 }}
+                />
+              ))}
+            </div>
           </div>
 
           <p className="text-[10px] uppercase tracking-[0.3em] text-white/35">

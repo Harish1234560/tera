@@ -1,5 +1,6 @@
 import { motion, useInView, AnimatePresence } from "framer-motion";
 import { useRef, useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import { X, ChevronLeft, ChevronRight } from "lucide-react";
 
 type GalleryYear = "2025" | "2024";
@@ -10,25 +11,35 @@ interface GalleryImage {
   caption: string;
 }
 
+const eventImageFiles = [
+  "WhatsApp Image 2026-10-27 at 12.34.18 PM.jpeg",
+  "WhatsApp Image 2026-10-27 at 12.34.20 PM.jpeg",
+  "WhatsApp Image 2026-10-28 at 11.59.32 AM.jpeg",
+  "WhatsApp Image 2026-10-28 at 11.59.33 AM (1).jpeg",
+  "WhatsApp Image 2026-10-28 at 11.59.33 AM (2).jpeg",
+  "WhatsApp Image 2026-10-28 at 11.59.33 AM.jpeg",
+  "WhatsApp Image 2026-10-28 at 11.59.34 AM (1).jpeg",
+  "WhatsApp Image 2026-10-28 at 11.59.34 AM (2).jpeg",
+  "WhatsApp Image 2026-10-28 at 11.59.34 AM.jpeg",
+  "WhatsApp Image 2026-10-28 at 11.59.35 AM (1).jpeg",
+  "WhatsApp Image 2026-10-28 at 11.59.35 AM.jpeg",
+  "WhatsApp Image 2026-10-28 at 11.59.36 AM.jpeg",
+  "WhatsApp Image 2026-10-28 at 11.59.37 AM (1).jpeg",
+  "WhatsApp Image 2026-10-28 at 11.59.37 AM.jpeg",
+  "WhatsApp Image 2026-10-28 at 11.59.38 AM (1).jpeg",
+  "WhatsApp Image 2026-10-28 at 11.59.38 AM.jpeg",
+];
+
+const createGalleryImages = (year: GalleryYear, files: string[]): GalleryImage[] =>
+  files.map((file, index) => ({
+    src: `/images/${encodeURIComponent(file)}`,
+    alt: `${year} event photo ${index + 1}`,
+    caption: `${year} — Event snapshot ${index + 1}`,
+  }));
+
 const galleryByYear: Record<GalleryYear, GalleryImage[]> = {
-  "2025": [
-    { src: "https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=600&q=80", alt: "Tech conference", caption: "TERA 2K25 — Grand Opening Ceremony" },
-    { src: "https://images.unsplash.com/photo-1475721027785-f74eccf877e2?w=600&q=80", alt: "Speaker on stage", caption: "Keynote by Industry Expert" },
-    { src: "https://images.unsplash.com/photo-1591115765373-5207764f72e7?w=600&q=80", alt: "Students collaborating", caption: "Hackathon in Action" },
-    { src: "https://images.unsplash.com/photo-1523580494863-6f3031224c94?w=600&q=80", alt: "Award ceremony", caption: "Prize Distribution Ceremony" },
-    { src: "https://images.unsplash.com/photo-1517048676732-d65bc937f952?w=600&q=80", alt: "Team discussion", caption: "Team Brainstorming Session" },
-    { src: "https://images.unsplash.com/photo-1505373877841-8d25f7d46678?w=600&q=80", alt: "Workshop", caption: "Hands-on Workshop" },
-    { src: "https://images.unsplash.com/photo-1531482615713-2afd69097998?w=600&q=80", alt: "Coding hackathon", caption: "Code Nexus Competition" },
-    { src: "https://images.unsplash.com/photo-1559223607-a43c990c692c?w=600&q=80", alt: "Networking", caption: "Networking & Fun" },
-  ],
-  "2024": [
-    { src: "https://images.unsplash.com/photo-1560439514-4e9645039924?w=600&q=80", alt: "Conference hall", caption: "TERA 2K24 — Inauguration" },
-    { src: "https://images.unsplash.com/photo-1515187029135-18ee286d815b?w=600&q=80", alt: "Panel discussion", caption: "Expert Panel Discussion" },
-    { src: "https://images.unsplash.com/photo-1528605248644-14dd04022da1?w=600&q=80", alt: "Group photo", caption: "Participants Group Photo" },
-    { src: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=600&q=80", alt: "Team work", caption: "Collaborative Coding Session" },
-    { src: "https://images.unsplash.com/photo-1556761175-5973dc0f32e7?w=600&q=80", alt: "Presentation", caption: "Student Presentations" },
-    { src: "https://images.unsplash.com/photo-1558008258-3256797b43f3?w=600&q=80", alt: "Data viz", caption: "Data Visualization Contest" },
-  ],
+  "2025": createGalleryImages("2025", eventImageFiles.slice(0, 8)),
+  "2024": createGalleryImages("2024", eventImageFiles.slice(8)),
 };
 
 const years: GalleryYear[] = ["2025", "2024"];
@@ -67,22 +78,48 @@ export const GalleryStrip = () => {
   const images = galleryByYear["2025"];
 
   return (
-    <section aria-label="Event photo highlights" className="relative py-8 overflow-hidden">
-      <div
-        ref={scrollRef}
-        className="flex gap-4 overflow-hidden"
-        style={{ scrollbarWidth: "none" }}
-      >
-        {[...images, ...images].map((image, index) => (
-          <img
-            key={`${image.src}-${index}`}
-            src={image.src}
-            alt={index < images.length ? image.alt : ""}
-            aria-hidden={index >= images.length}
-            className="h-36 w-64 shrink-0 rounded-xl object-cover md:h-48 md:w-80"
-            loading="lazy"
-          />
-        ))}
+    <section aria-label="Event photo highlights" className="relative overflow-hidden py-8 md:py-12">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-40px" }}
+          transition={{ duration: 0.6 }}
+          className="mb-8 text-center"
+        >
+          <h3 className="font-display text-3xl font-bold text-gradient-gold md:text-4xl">
+            Our Journey in Frames
+          </h3>
+          <p className="mx-auto mt-3 max-w-xl font-body text-sm text-muted-foreground md:text-base">
+            Relive the energy, creativity, and unforgettable moments from TERA.
+          </p>
+        </motion.div>
+
+        <div
+          ref={scrollRef}
+          className="flex gap-4 overflow-hidden"
+          style={{ scrollbarWidth: "none" }}
+        >
+          {[...images, ...images].map((image, index) => (
+            <img
+              key={`${image.src}-${index}`}
+              src={image.src}
+              alt={index < images.length ? image.alt : ""}
+              aria-hidden={index >= images.length}
+              className="h-36 w-64 shrink-0 rounded-xl object-cover md:h-48 md:w-80"
+              loading="lazy"
+            />
+          ))}
+        </div>
+
+        <div className="mt-6 flex justify-center">
+          <Link
+            to="/gallery"
+            className="inline-flex items-center justify-center rounded-full border border-primary/40 bg-primary/10 px-6 py-3 font-body text-sm font-semibold text-primary transition-all duration-300 hover:bg-primary hover:text-primary-foreground"
+          >
+            Explore Gallery
+          </Link>
+        </div>
       </div>
     </section>
   );

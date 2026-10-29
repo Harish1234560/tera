@@ -38,7 +38,6 @@ const leaders: Leader[] = [
     person: {
       name: "B.Venkateshwara",
       phone: "9014790550",
-      image: "/images/vp.jpeg",
     },
   },
 
