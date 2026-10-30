@@ -2,31 +2,155 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    />
 
-<title>TERA IGNITE 2K26 — National Level Technical Fest</title>
+    <title>TERA IGNITE 2K26 — National Level Technical Fest</title>
+    <meta
+      name="description"
+      content="TERA IGNITE 2K26 is a National Level Two-Day Symposium by the Department of EEE, MITS Madanapalle."
+    />
+    <link rel="canonical" href="%VITE_SITE_URL%/" />
 
-<meta
-  name="description"
-  content="TERA IGNITE 2K26 is a National Level Two-Day Symposium by the Department of EEE, MITS Madanapalle."
-/>
-<link rel="icon" type="image/png" href="/EEElogo.png" />
-<!-- Open Graph (WhatsApp, LinkedIn) -->
-<meta property="og:title" content="TERA IGNITE 2K26 — National Level Technical Fest" />
-<meta
-  property="og:description"
-  content="A National Level Two-Day Symposium celebrating electrical engineering, innovation, and the future of technology."
-/>
-<meta property="og:type" content="website" />
-<meta property="og:image" content="/EEElogo.png" />
+    <meta name="theme-color" content="#050507" />
+    <meta name="color-scheme" content="dark light" />
 
-<!-- Twitter -->
-<meta name="twitter:card" content="summary_large_image" />
-<meta name="twitter:image" content="/EEElogo.png" />
+    <link rel="icon" type="image/png" href="/EEElogo.png" />
+    <link rel="apple-touch-icon" href="/EEElogo.png" />
+
+    <!-- Theme: runs before first paint, so there is no light/dark flash -->
+    <script>
+      (function () {
+        try {
+          var t =
+            localStorage.getItem("tera-theme") ||
+            localStorage.getItem("dfesta-theme");
+          if (t !== "light" && t !== "dark") t = "dark";
+          var r = document.documentElement;
+          r.classList.add(t);
+          r.style.colorScheme = t;
+        } catch (e) {
+          document.documentElement.classList.add("dark");
+        }
+      })();
+    </script>
+
+    <!-- Critical CSS: dark page + boot screen until the app mounts -->
+    <style>
+      html { background: #050507; color-scheme: dark; }
+      html.light { background: #ffffff; color-scheme: light; }
+      body { margin: 0; }
+      #boot {
+        position: fixed;
+        inset: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 20px;
+        background: #050507;
+        color: rgba(255, 255, 255, 0.65);
+        font: 600 11px/1 system-ui, -apple-system, "Segoe UI", sans-serif;
+        letter-spacing: 0.4em;
+        text-transform: uppercase;
+      }
+      #boot .disc {
+        width: 84px;
+        height: 84px;
+        border-radius: 50%;
+        overflow: hidden;
+        background: #fff;
+        box-shadow: 0 0 0 3px rgba(255, 120, 40, 0.55), 0 0 48px rgba(255, 50, 40, 0.45);
+        animation: boot-pulse 1.6s ease-in-out infinite;
+      }
+      #boot img { width: 100%; height: 100%; object-fit: cover; transform: scale(1.14); }
+      @keyframes boot-pulse {
+        0%, 100% { transform: scale(1); opacity: 0.85; }
+        50% { transform: scale(1.05); opacity: 1; }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        #boot .disc { animation: none; }
+      }
+    </style>
+
+    <!-- Start downloading the hero image early (remove if you prefer) -->
+    <link rel="preload" as="image" href="/images/hero-bg-mobile.jpg" media="(max-width: 767px)" fetchpriority="high" />
+    <link rel="preload" as="image" href="/images/hero-bg.jpg" media="(min-width: 768px)" fetchpriority="high" />
+
+    <!-- Open Graph (WhatsApp, LinkedIn, Facebook) -->
+    <meta property="og:site_name" content="TERA IGNITE 2K26" />
+    <meta property="og:title" content="TERA IGNITE 2K26 — National Level Technical Fest" />
+    <meta
+      property="og:description"
+      content="A National Level Two-Day Symposium celebrating electrical engineering, innovation, and the future of technology."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="%VITE_SITE_URL%/" />
+    <meta property="og:locale" content="en_IN" />
+    <meta property="og:image" content="%VITE_SITE_URL%/og-image.jpg" />
+    <meta property="og:image:type" content="image/jpeg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="TERA IGNITE 2K26, a National Level Two-Day Symposium by the Department of EEE, MITS Madanapalle" />
+
+    <!-- Twitter / X -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="TERA IGNITE 2K26 — National Level Technical Fest" />
+    <meta
+      name="twitter:description"
+      content="A National Level Two-Day Symposium by the Department of EEE, MITS Madanapalle."
+    />
+    <meta name="twitter:image" content="%VITE_SITE_URL%/og-image.jpg" />
+    <meta name="twitter:image:alt" content="TERA IGNITE 2K26 poster" />
+
+    <!-- Event data for search engines -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Event",
+        "name": "TERA IGNITE 2K26",
+        "description": "A National Level Two-Day Symposium celebrating electrical engineering, innovation, and the future of technology.",
+        "startDate": "2026-11-11",
+        "endDate": "2026-11-12",
+        "eventStatus": "https://schema.org/EventScheduled",
+        "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
+        "location": {
+          "@type": "Place",
+          "name": "Madanapalle Institute of Technology & Science",
+          "address": {
+            "@type": "PostalAddress",
+            "addressLocality": "Madanapalle",
+            "addressRegion": "Andhra Pradesh",
+            "addressCountry": "IN"
+          }
+        },
+        "organizer": {
+          "@type": "Organization",
+          "name": "Department of EEE, MITS Madanapalle",
+          "url": "%VITE_SITE_URL%/"
+        },
+        "image": ["%VITE_SITE_URL%/og-image.jpg"],
+        "url": "%VITE_SITE_URL%/"
+      }
+    </script>
   </head>
 
   <body>
-    <div id="root"></div>
+    <noscript>
+      <p style="padding:24px;font-family:system-ui,sans-serif;color:#fff;background:#050507">
+        TERA IGNITE 2K26 needs JavaScript. Please enable it and reload.
+      </p>
+    </noscript>
+
+    <div id="root">
+      <div id="boot" aria-hidden="true">
+        <div class="disc"><img src="/EEElogo.png" alt="" width="84" height="84" /></div>
+        <span>TERA IGNITE 2K26</span>
+      </div>
+    </div>
+
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
