@@ -169,9 +169,6 @@ const Footer = () => {
           <p className="text-center font-body text-xs text-muted-foreground sm:text-left">
             © 2026 TERA IGNITE, Department of EEE, MITS
           </p>
-          <p className="text-center font-body text-xs text-muted-foreground">
-            Made by Arc Club for TERA 2K26
-          </p>
           <button
             onClick={toTop}
             aria-label="Back to top"
