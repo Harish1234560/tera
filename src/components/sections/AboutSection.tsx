@@ -46,7 +46,7 @@ const aboutBlocks: Block[] = [
     subtitle: "National Level Two-Days Symposium",
     desc: "TERA 2K26 is a National Level Two-Days Symposium organized by the Department of EEE. It brings together students, researchers, and industry experts for competitions, workshops, tech talks, and creative showcases celebrating electrical engineering and emerging technologies.",
     image:
-      "public/images/WhatsApp Image 2026-10-28 at 11.59.32 AM.jpeg",
+      "event.jpeg",
   },
 ];
 

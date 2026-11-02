@@ -218,15 +218,8 @@ const Navbar = () => {
                     >
                       <Link
                         to={item.href}
-                        className="group flex min-h-[60px] items-center gap-4 border-b border-white/10 py-3 active:opacity-70"
+                        className="group flex min-h-[60px] items-center border-b border-white/10 py-3 active:opacity-70"
                       >
-                        <span
-                          className={`font-body text-xs tabular-nums tracking-widest ${
-                            active ? "text-primary" : "text-muted-foreground/60"
-                          }`}
-                        >
-                          {String(i + 1).padStart(2, "0")}
-                        </span>
                         <span
                           className={`font-display text-3xl font-bold ${
                             active ? "text-gradient-gold" : "text-foreground"
