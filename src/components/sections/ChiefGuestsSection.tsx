@@ -6,7 +6,7 @@ const dignitaries = [
     name: "Dr. A. V. Pavan Kumar",
     title: "Professor & Assistant Dean",
     subtitle: "Ph.D. (BITS-Pilani, Hyderabad)",
-    image: "/image.png",
+    image: "/image.jpeg",
   },
   {
     name: "Dr. Manavaalan Gunasekaran",

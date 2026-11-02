@@ -10,8 +10,7 @@ import {
 } from "lucide-react";
 import { getLenis } from "@/components/SmoothScroll";
 
-/* Replace with your real handle, e.g. https://instagram.com/your_handle */
-const INSTAGRAM_URL = "https://www.instagram.com/";
+const INSTAGRAM_URL = "https://www.instagram.com/tera.ignite_2k26?rpxt=YnY3ZmI4cDg2YnUy";
 
 const PHONE_DISPLAY = "+91 63004 81038";
 const PHONE_TEL = "+916300481038";

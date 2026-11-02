@@ -77,8 +77,15 @@ const eventGroups: EventGroup[] = [
     eventName: "Paper Presentation",
     icon: BookOpen,
     students: [
-      { name: "Vishnuteja", phone: "9440645337" },
-      { name: "Prudhvi", phone: "6300067360" },
+      { name: "Dinesh Gowda", phone: "9347301874" },
+    ],
+  },
+  {
+    eventName: "Poster Presentation",
+    icon: Presentation,
+    students: [
+      { name: "B. Vishnu", phone: "9440645337" },
+      { name: "S. Abdul", phone: "7569868140" },
     ],
   },
   {
@@ -92,7 +99,10 @@ const eventGroups: EventGroup[] = [
   {
     eventName: "Technical Quiz",
     icon: Zap,
-    students: [{ name: "Varun", phone: "7416668177" }],
+    students: [
+      { name: "A. Venkatesh", phone: "6302485659" },
+      { name: "R. Rajesh", phone: "6309356638" },
+    ],
   },
 ];
 

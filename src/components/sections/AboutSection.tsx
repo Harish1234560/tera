@@ -30,15 +30,15 @@ const aboutBlocks: Block[] = [
     subtitle: "Deemed to be University",
     desc: "Established in 1998, MITS is a premier institution located in the serene surroundings of Madanapalle on a 26.17-acre campus. With NAAC A+ accreditation and NBA-recognized programs, the institute has built a legacy of academic excellence over 27 years. In 2025, the Government of India conferred MITS with the status of Deemed to be University. Guided by visionary leadership, MITS continues its journey toward global standards in education and innovation.",
     image:
-      "https://images.unsplash.com/photo-1562774053-701939374585?auto=format&fit=crop&w=1200&q=80",
+      "mits.jpeg",
   },
   {
     icon: Zap,
     title: "Department of EEE",
     subtitle: "Electrical and Electronics Engineering",
     desc: "The Department of Electrical and Electronics Engineering explores the technologies that power modern life, from electrical systems and electronics to energy and automation. Through hands-on learning and innovation, students develop skills to solve real-world engineering challenges.",
-    image:
-      "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&w=1200&q=80",
+            image:
+              "eee.jpeg",
   },
   {
     icon: Sparkles,
@@ -46,7 +46,7 @@ const aboutBlocks: Block[] = [
     subtitle: "National Level Two-Days Symposium",
     desc: "TERA 2K26 is a National Level Two-Days Symposium organized by the Department of EEE. It brings together students, researchers, and industry experts for competitions, workshops, tech talks, and creative showcases celebrating electrical engineering and emerging technologies.",
     image:
-      "https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&fit=crop&w=1200&q=80",
+      "public/images/WhatsApp Image 2026-10-28 at 11.59.32 AM.jpeg",
   },
 ];
 

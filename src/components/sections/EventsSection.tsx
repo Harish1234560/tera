@@ -63,6 +63,7 @@ const events: EventItem[] = [
       "Problem statement is revealed at the start of the event.",
       "Judges' decision is final.",
     ],
+    formUrl: "https://docs.google.com/forms/d/e/1FAIpQLSeRHtIz7fwcxhIpN3Xnk3Is6goRBYzvlBfX7pUPr_erq-tK2A/viewform",
   },
   {
     id: "project-expo",
@@ -83,6 +84,7 @@ const events: EventItem[] = [
       "Each team gets 7 minutes to present, followed by Q&A.",
       "Plagiarised projects will be disqualified.",
     ],
+    formUrl: "https://docs.google.com/forms/d/e/1FAIpQLSfNkgItsW4ZjVmZhca4DN77B-QH_5EHbnoyGPp08TDjI2tLuw/viewform?usp=header",
   },
   {
     id: "ppt",
@@ -103,6 +105,28 @@ const events: EventItem[] = [
       "Original work only.",
       "Maximum 2 members per team.",
     ],
+    formUrl: "https://forms.gle/S7S9Lu1uRiJg6dUTA",
+  },
+  {
+    id: "poster-presentation",
+    title: "Poster Presentation",
+    icon: Presentation,
+    mode: "both",
+    teamSize: "1-2 MEMBERS",
+    description:
+      "Present your innovative ideas visually through a poster and communicate your research to judges and visitors.",
+    date: "November 12, 2026",
+    venue: "To be updated",
+    time: "2:00 PM",
+    internalFee: 49,
+    externalFee: 59,
+    rules: [
+      "Posters must be an original presentation of the participant's work.",
+      "Maximum 2 members per team.",
+      "Each team gets 5 minutes to present, followed by Q&A.",
+      "Posters must follow the dimensions and template provided by the organisers.",
+    ],
+    formUrl: "https://forms.gle/4sa4XwNCwGsmwLu19",
   },
   {
     id: "escape-room",
@@ -142,6 +166,7 @@ const events: EventItem[] = [
       "No electronic devices allowed.",
       "Judges' decision is final.",
     ],
+    formUrl: "https://docs.google.com/forms/d/e/1FAIpQLSdx9o1llSB4S6GefM77dbfcWV1NkGfDbOM-P_7KgwPMVxMmQw/viewform?pli=1",
   },
 ];
 
