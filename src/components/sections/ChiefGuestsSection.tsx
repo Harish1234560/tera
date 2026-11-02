@@ -3,9 +3,9 @@ import { useRef } from "react";
 
 const dignitaries = [
   {
-    name: "Dr. A. V. Pavan Kumar",
-    title: "Professor & Assistant Dean",
-    subtitle: "Ph.D. (BITS-Pilani, Hyderabad)",
+    name: "Dr. C. Kamal Basha",
+    title: " Professor & Vice Principal",
+    subtitle: " Ph.D. (JNTUA, Anantapur)",
     image: "/image.jpeg",
   },
   {

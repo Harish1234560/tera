@@ -77,7 +77,6 @@ const eventGroups: EventGroup[] = [
     eventName: "Paper Presentation",
     icon: BookOpen,
     students: [
-      { name: "Vishnuteja", phone: "9440645337" },
       { name: "Prudhvi", phone: "6300067360" },
       { name: "Dinesh Gowda", phone: "9347301874" },
     ],
