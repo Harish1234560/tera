@@ -147,6 +147,9 @@ const events: EventItem[] = [
       "The fastest team to clear all rooms wins.",
       "Damaging equipment leads to disqualification.",
     ],
+
+
+    formUrl: "https://forms.gle/ZibZcNCvoeJTJMk8A"
   },
   {
     id: "tech-quiz",
@@ -698,6 +701,13 @@ const EventsSection = ({ solidCards = false }: { solidCards?: boolean }) => {
               </div>
             );
           })}
+          <figure className="group relative h-full overflow-hidden rounded-3xl border border-white/10 bg-card transition-[filter,border-color] duration-500 group-data-[active=true]:border-red-400/50 [@media(hover:hover)]:hover:border-red-400/40">
+            <img
+              src="/ideavya-2026.jpg"
+              alt="IDEAVYA 2026 innovation event poster"
+              className="block h-full min-h-[620px] w-full object-cover object-center"
+            />
+          </figure>
         </div>
       </div>
 
