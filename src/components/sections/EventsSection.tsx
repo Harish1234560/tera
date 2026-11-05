@@ -701,11 +701,11 @@ const EventsSection = ({ solidCards = false }: { solidCards?: boolean }) => {
               </div>
             );
           })}
-          <figure className="group relative h-full overflow-hidden rounded-3xl border border-white/10 bg-card transition-[filter,border-color] duration-500 group-data-[active=true]:border-red-400/50 [@media(hover:hover)]:hover:border-red-400/40">
+          <figure className="group relative h-full overflow-hidden rounded-3xl border border-white/10 bg-black transition-[filter,border-color] duration-500 group-data-[active=true]:border-red-400/50 [@media(hover:hover)]:hover:border-red-400/40">
             <img
               src="/ideavya-2026.jpg"
               alt="IDEAVYA 2026 innovation event poster"
-              className="block h-full min-h-[620px] w-full object-cover object-center"
+              className="block h-auto w-full object-contain object-center"
             />
           </figure>
         </div>
